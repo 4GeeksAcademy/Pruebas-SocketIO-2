@@ -1,6 +1,7 @@
 import { CurrencyConverter } from "../components/currencyConverter/CurrencyConverter";
 import {BankingGraphics} from "../components/BankingGraphics/BankingGraphics"
 import { useAuth } from "../hooks/useAuth";
+import ChatSocketClient from "../Chat";
 
 export const Home = () => {
 	const { signUp, login, token, error} = useAuth()
@@ -24,6 +25,7 @@ export const Home = () => {
 			<button onClick={() => signUp(newUser)} className="btn btn-success">Sign Up</button>
 			<CurrencyConverter/>
 			<BankingGraphics/>
+			<ChatSocketClient/>
 		</>
 
 	)

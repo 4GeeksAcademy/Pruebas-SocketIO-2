@@ -2,6 +2,8 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 import os
+from flask_socketio import SocketIO
+from api.sockets.handlers import register_socket_handlers
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
@@ -23,7 +25,7 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = os.getenv('VARIABLE_NAME')  
+app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
 
 # database condiguration
@@ -92,10 +94,23 @@ cloudinary.config(
     secure=True
 )
 
+# Scoketio
+app.config['SECRET_KEY'] = "Secretismo"
+
+socketio = SocketIO(
+    app,
+    cors_allowed_origins="*",
+    path="/socket.io",
+    logger=True,
+    engineio_logger=False,
+)
+
+register_socket_handlers(socketio,app)
+
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
-    app.run(host='0.0.0.0', port=PORT, debug=True)
+    socketio.run(app,host='0.0.0.0', port=PORT, debug=True)
 
 
 
