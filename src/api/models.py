@@ -78,7 +78,7 @@ class Post(db.Model):
     divisas_one: Mapped[str] = mapped_column(String(50))
     divisas_two: Mapped[str] = mapped_column(String(50))
     created_data: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow)
+        DateTime, default=datetime.now)
 
     def serialize(self):
         return {
@@ -89,7 +89,6 @@ class Post(db.Model):
             "divisas_one": self.divisas_one,
             "divisas_two": self.divisas_two,
             "created_data": self.created_data.strftime("%d/%m/%Y %H:%M")
-
         }
 
 

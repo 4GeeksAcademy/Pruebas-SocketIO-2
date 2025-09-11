@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io } from "socket.io-client";
+import { useAuth } from "./hooks/useAuth";
 
 // Componente único: conecta, lista chats, crea chats, carga historial con paginación, envía mensajes,
 // indicadores de escritura y acuses de lectura efímeros. UI simple lista para copiar/pegar.
@@ -291,7 +292,12 @@ export default function ChatSocketClient() {
                     <div>
                         <div style={{ fontWeight: 700 }}>Chat #{activeChatId ?? "—"}</div>
                         <div style={{ fontSize: 12, color: "#6b7280" }}>
-                            {activeChatId ? "Historial y mensajes en tiempo real" : "Selecciona un chat"}
+                            {/* {activeChatId ? "Historial y mensajes en tiempo real" : "Selecciona un chat"} */}
+                            {typingOthers.length > 0 && (
+                                <div style={{ fontSize: 12, color: "#6b7280", padding: "4px 8px" }}>
+                                    {typingOthers.length === 1 ? `Usuario ${typingOthers[0]} está escribiendo…` : `Varios usuarios están escribiendo…`}
+                                </div>
+                            )}
                         </div>
                     </div>
                     {activeChatId && (
@@ -306,11 +312,6 @@ export default function ChatSocketClient() {
                     {(messagesByChat[activeChatId] || []).map((m) => (
                         <MessageBubble key={m.id} mine={m.user_id === userId} content={m.content} id={m.id} />
                     ))}
-                    {typingOthers.length > 0 && (
-                        <div style={{ fontSize: 12, color: "#6b7280", padding: "4px 8px" }}>
-                            {typingOthers.length === 1 ? `Usuario ${typingOthers[0]} está escribiendo…` : `Varios usuarios están escribiendo…`}
-                        </div>
-                    )}
                 </div>
 
                 {/* Input */}
